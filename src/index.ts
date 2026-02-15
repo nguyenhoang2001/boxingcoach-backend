@@ -2,6 +2,9 @@ import express, { Express, Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import { createClient } from '@supabase/supabase-js';
+import authRoutes from './routes/auth';
+import userRoutes from './routes/users';
+import trainingRoutes from './routes/training';
 
 // Load environment variables
 dotenv.config();
@@ -16,13 +19,15 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 );
 
-// Middleware
+// Middleware - CORS must come first
 app.use(cors({
-  origin: true, // Allow all origins in development
+  origin: true, // Allow all origins
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS', 'PATCH'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
 }));
+
+// Body parsing middleware
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -52,11 +57,6 @@ app.get('/api/v1', (req: Request, res: Response) => {
     }
   });
 });
-
-// Import routes
-import authRoutes from './routes/auth';
-import userRoutes from './routes/users';
-import trainingRoutes from './routes/training';
 
 // Routes
 app.use('/api/v1/auth', authRoutes);
