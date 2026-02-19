@@ -9,6 +9,16 @@ const supabase = createClient(
   process.env.SUPABASE_SERVICE_ROLE_KEY || ''
 );
 
+// Handle OPTIONS requests for CORS preflight
+router.options('*', (req: Request, res: Response) => {
+  res.status(200).end();
+});
+
+// Test endpoint to verify routing
+router.get('/test', (req: Request, res: Response) => {
+  res.json({ message: 'Auth routes are working', timestamp: new Date().toISOString() });
+});
+
 /**
  * POST /api/v1/auth/signup
  * Register a new user

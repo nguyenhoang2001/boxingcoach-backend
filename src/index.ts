@@ -31,6 +31,9 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+// Handle OPTIONS for all routes (CORS preflight)
+app.options('*', cors());
+
 // Request logging middleware
 app.use((req: Request, res: Response, next: NextFunction) => {
   console.log(`${req.method} ${req.path} - ${new Date().toISOString()}`);
